@@ -113,10 +113,54 @@ function drawState() {
     }
 }
 
-function checkWin() {
-    
+function resetState() {
+    gameState = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 }
 
+function displayWin(result) {
+    resetState();
+    ctx.font = "24px Serif";
+    if (result === 0) {
+        ctx.fillStyle = "#aa0000";
+        ctx.fillText("Noughts win!", width/2, height/2, 200);
+    } else if (result === 1) {
+        ctx.fillStyle = "0000aa";
+        ctx.fillText("Crosses win!", width/2, height/2, 200);
+    } else if (result === -1) {
+        ctx.fillStyle = "ffffff";
+        ctx.fillText("Draw!", width/2, height/2, 200);
+    }
+    setTimeout(() => {winner = false;}, 3000);
+}
+
+function checkWin() {
+    if (gameState[0][0] === 1 && gameState[1][1] === 1 && gameState[2][2] === 1 ||
+        gameState[2][0] === 1 && gameState[1][1] === 1 && gameState[0][2] === 1 ||
+        gameState[0][0] === 1 && gameState[0][1] === 1 && gameState[0][2] === 1 ||
+        gameState[1][0] === 1 && gameState[1][1] === 1 && gameState[1][2] === 1 ||
+        gameState[2][0] === 1 && gameState[2][1] === 1 && gameState[2][2] === 1 ||
+        gameState[0][0] === 1 && gameState[1][0] === 1 && gameState[2][0] === 1 ||
+        gameState[0][1] === 1 && gameState[1][1] === 1 && gameState[2][1] === 1 ||
+        gameState[0][2] === 1 && gameState[1][2] === 1 && gameState[2][2] === 1) {
+        displayWin(0);
+        winner = true;
+    } else if (gameState[0][0] === 2 && gameState[1][1] === 2 && gameState[2][2] === 2 ||
+        gameState[2][0] === 2 && gameState[1][1] === 2 && gameState[0][2] === 2 ||
+        gameState[0][0] === 2 && gameState[0][1] === 2 && gameState[0][2] === 2 ||
+        gameState[1][0] === 2 && gameState[1][1] === 2 && gameState[1][2] === 2 ||
+        gameState[2][0] === 2 && gameState[2][1] === 2 && gameState[2][2] === 2 ||
+        gameState[0][0] === 2 && gameState[1][0] === 2 && gameState[2][0] === 2 ||
+        gameState[0][1] === 2 && gameState[1][1] === 2 && gameState[2][1] === 2 ||
+        gameState[0][2] === 2 && gameState[1][2] === 2 && gameState[2][2] === 2) {
+        displayWin(1);
+        winner = true;
+    } else if (gameState[0][0] !== 0 && gameState[0][1] !== 0 && gameState[0][2] !== 0 &&
+        gameState[1][0] !== 0 && gameState[1][1] !== 0 && gameState[1][2] !== 0 &&
+        gameState[2][0] !== 0 && gameState[2][1] !== 0 && gameState[2][2] !== 0) {
+        displayWin(-1);
+        winner = true;
+    }
+}
 function updateState() {
     if (shouldUpdate) {
         if (gameState[mY][mX] === 0) {
@@ -136,6 +180,8 @@ function updateState() {
 
 function renderFrame() {
     drawState();
+    drawGrid();
+    checkWin();
     updateState();
     window.requestAnimationFrame(renderFrame);
 }
